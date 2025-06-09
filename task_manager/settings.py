@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [
     'webserver',
     '127.0.0.1',
     'http://127.0.0.1:8000',
-    'python-project-52-p25m.onrender.com'
+    'python-project-52-p25m.onrender.com',
+    'localhost'
 ]
 
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'task_manager'
 ]
 
 MIDDLEWARE = [
@@ -60,7 +62,7 @@ ROOT_URLCONF = 'task_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
