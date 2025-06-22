@@ -11,7 +11,7 @@ migrate:
 	uv run python3 manage.py migrate
 
 start:
-	uv run manage.py runserver 0.0.0.0:8000
+	uv run manage.py runserver 127.0.0.1:8000
 
 collectstatic:
 	uv run python3 manage.py collectstatic --no-input

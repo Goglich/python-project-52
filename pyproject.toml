@@ -8,5 +8,7 @@ dependencies = [
     "dj-database-url>=3.0.0",
     "django>=5.2.2",
     "django-bootstrap5>=25.1",
+    "dotenv>=0.9.9",
+    "flake8>=7.3.0",
     "gunicorn>=23.0.0",
 ]
