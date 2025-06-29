@@ -19,6 +19,9 @@
         <ul class="nav me-auto"> 
             <li><a href="/" class="nav-link px-2 link-secondary">Менеджер задач</a></li> 
             <li><a href="/users" class="nav-link px-2">Пользователи</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="/statuses" class="nav-link px-2">Статусы</a></li>
+            {% endif %}
         </ul> 
         <div class="col-md-3 "> 
             {% if user.is_authenticated %}

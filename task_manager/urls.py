@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from .views import HomePageView
 from User.views import IndexView, RegistrationView, LoginUserView, LogoutUserView, UserEditView, UserDeleteView
+from status.views import StatusView, CreateStatusView, EditStatusView, StatusDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +29,8 @@ urlpatterns = [
     path('logout/', LogoutUserView.as_view()),
     path('users/<int:user_id>/update/', UserEditView.as_view(), name='edit_user'),
     path('users/<int:user_id>/delete/', UserDeleteView.as_view(), name='delete_user'),
+    path('statuses/', StatusView.as_view(), name='statuses'),
+    path('statuses/create/', CreateStatusView.as_view()),
+    path('statuses/<int:status_id>/update/', EditStatusView.as_view(), name='edit_status'),
+    path('statuses/<int:status_id>/delete/', StatusDeleteView.as_view(), name='delete_status'),
 ]

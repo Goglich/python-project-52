@@ -20,3 +20,5 @@ coverage.xml
 .venv
 env/
 venv/
+.pyc
+*.pyc

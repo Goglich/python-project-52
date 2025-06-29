@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container wrapper flex-grow-1">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="modal modal-sheet position-static d-block  p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="">
+            <h1 class="my-4">Удаление статуса</h1>
+            <form method="post">
+                {% csrf_token %}
+                <p>Вы уверены, что хотите удалить {{ status.name }}?</p>
+                <button type="submit" class="btn btn-danger">Да, удалить</button>
+                <a href="{% url 'statuses' %}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
