@@ -5,6 +5,7 @@ from .models import Status
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db.models import ProtectedError
 
 # Create your views here.
 class StatusView(ListView):
@@ -27,6 +28,12 @@ class StatusView(ListView):
 
 
 class CreateStatusView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         form = StatusForm()
         return render(request, 'status/create.html', {'form': form})
@@ -40,7 +47,7 @@ class CreateStatusView(View):
         return render(request, 'status/create.html', {'form': form})
     
 
-class EditStatusView(LoginRequiredMixin, UpdateView):
+class EditStatusView(UpdateView):
     model = Status
     form_class = StatusForm
     template_name = 'status/edit.html'
@@ -70,7 +77,7 @@ class EditStatusView(LoginRequiredMixin, UpdateView):
         return super().post(request, *args, **kwargs)
     
 
-class StatusDeleteView(LoginRequiredMixin, View):
+class StatusDeleteView(View):
     success_url = reverse_lazy('statuses')
     template_name = 'status/status_confirm_delete.html'
 
@@ -80,24 +87,21 @@ class StatusDeleteView(LoginRequiredMixin, View):
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
-
     def get_object(self):
         status_id = self.kwargs.get('status_id')
         return get_object_or_404(Status, pk=status_id)
 
     def get(self, request, *args, **kwargs):
         status_to_delete = self.get_object()
-        #if request.user.id != status_to_delete.id:
-        #    messages.error(request, 'У вас нет прав для удаления другого пользователя')
-        #    return redirect(self.success_url)
         return render(request, self.template_name, {'status': status_to_delete})
 
     def post(self, request, *args, **kwargs):
         status_to_delete = self.get_object()
-        #if request.user.id != status_to_delete.id:
-        #    messages.error(request, 'У вас нет прав для удаления другого пользователя')
-        #    return redirect(self.success_url)
-        status = status_to_delete.name
-        status_to_delete.delete()
-        messages.success(request, f'Статус {status} успешно удален')
-        return redirect(self.success_url)
+        status_name = status_to_delete.name
+        try:
+            status_to_delete.delete()
+            messages.success(request, f'Статус {status_name} успешно удален')
+            return redirect(self.success_url)
+        except ProtectedError:
+            messages.error(request, 'Нельзя удалить статус, так как он связан с задачами.')
+            return redirect('statuses')

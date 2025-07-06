@@ -19,6 +19,7 @@ from django.urls import path
 from .views import HomePageView
 from User.views import IndexView, RegistrationView, LoginUserView, LogoutUserView, UserEditView, UserDeleteView
 from status.views import StatusView, CreateStatusView, EditStatusView, StatusDeleteView
+from task.views import TaskView, ShowTaskView, CreateTaskView, EditTaskView, DeleteTaskView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +34,9 @@ urlpatterns = [
     path('statuses/create/', CreateStatusView.as_view()),
     path('statuses/<int:status_id>/update/', EditStatusView.as_view(), name='edit_status'),
     path('statuses/<int:status_id>/delete/', StatusDeleteView.as_view(), name='delete_status'),
+    path('tasks/', TaskView.as_view(), name='tasks'),
+    path('tasks/<int:task_id>/', ShowTaskView.as_view(), name='task'),
+    path('tasks/create/', CreateTaskView.as_view(), name='tasks_create'),
+    path('tasks/<int:task_id>/update/', EditTaskView.as_view(), name='edit_task'),
+    path('tasks/<int:task_id>/delete/', DeleteTaskView.as_view(), name='delete_task'),
 ]

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container wrapper flex-grow-1">
+    <div class="modal modal-sheet position-static d-block  p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="">
+            <h1 class="my-4">Задачи</h1>
+            <a href="/tasks/create/"><button type="button" class="btn btn-outline-primary me-2">Создать
+                    задачу</button></a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя</th>
+                    <th>Статус</th>
+                    <th>Автор</th>
+                    <th>Исполнитель</th>
+                    <th>Дата создания</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.id }}</td>
+                    <td><a href="/tasks/{{ task.id }}">{{ task.name }}</a></td>
+                    <td>{{ task.status.name }}</td>
+                    <td>{{ task.author.first_name }} {{ task.author.last_name }}</td>
+                    <td>
+                        {% if task.assignee %}
+                        {{ task.assignee.first_name }} {{ task.assignee.last_name }}
+                        {% else %}
+                        Не назначен
+                        {% endif %}
+                    </td>
+                    <td>{{ task.time_create|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <a href="/tasks/{{ task.id }}/update/">Изменить</a>
+                        <br>
+                        <a href="/tasks/{{ task.id }}/delete/">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
