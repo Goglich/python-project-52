@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container wrapper flex-grow-1">
+    <div class="modal modal-sheet position-static d-block  p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="">
+            <h1 class="my-4">Создание метки</h1>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}" />
+                <div class="mb-3">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">Имя</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <div class="invalid-feedback">
+                        {{ form.name.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <p><button class="btn btn-primary" type="submit">Создать</button></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -9,9 +9,8 @@
         <div class="card-body">
             <form method="post">
                 {% csrf_token %}
-                
                 <div class="mb-3">
-                    <label for="id_name" class="form-label">Название</label>
+                    <label for="id_name" class="form-label fw-bold">Название</label>
                     <input type="text" class="form-control" id="id_name" name="name" 
                            value="{{ form.name.value|default_if_none:'' }}" required>
                     {% if form.name.errors %}
@@ -20,9 +19,8 @@
                         </div>
                     {% endif %}
                 </div>
-                
                 <div class="mb-3">
-                    <label for="id_description" class="form-label">Описание</label>
+                    <label for="id_description" class="form-label fw-bold">Описание</label>
                     <textarea class="form-control" id="id_description" name="description" 
                               rows="4">{{ form.description.value|default_if_none:'' }}</textarea>
                     {% if form.description.errors %}
@@ -31,10 +29,9 @@
                         </div>
                     {% endif %}
                 </div>
-                
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="id_status" class="form-label">Статус</label>
+                        <label for="id_status" class="form-label fw-bold">Статус</label>
                         <select class="form-select" id="id_status" name="status" required>
                             {% for value, label in form.status.field.choices %}
                                 <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>
@@ -48,9 +45,8 @@
                             </div>
                         {% endif %}
                     </div>
-                    
                     <div class="col-md-6">
-                        <label for="id_assignee" class="form-label">Исполнитель</label>
+                        <label for="id_assignee" class="form-label fw-bold">Исполнитель</label>
                         <select class="form-select" id="id_assignee" name="assignee">
                             <option value="">Не назначен</option>
                             {% for user in form.assignee.field.queryset %}
@@ -66,9 +62,27 @@
                         {% endif %}
                     </div>
                 </div>
-                
+                <div class="mb-4">
+                    <label for="id_tags" class="form-label fw-bold">Метки</label>
+                    <select class="form-select" id="id_tags" name="tags" multiple size="4">
+                        {% for tag in form.tags.field.queryset %}
+                            <option value="{{ tag.id }}" 
+                                {% if tag.id in form.tags.value %}selected{% endif %}>
+                                {{ tag.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">
+                        Для выбора нескольких меток удерживайте Ctrl (Windows) или Command (Mac)
+                    </small>
+                    {% if form.tags.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.tags.errors }}
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="{% url 'task' task.id %}" class="btn btn-outline-secondary">
+                    <a href="{% url 'tasks' %}" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> Отмена
                     </a>
                     <button type="submit" class="btn btn-primary">

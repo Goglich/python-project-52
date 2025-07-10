@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from status.models import Status
+from tag.models import Tag
 
-# Create your models here.
 class Task(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -22,6 +22,12 @@ class Task(models.Model):
         Status,
         on_delete=models.PROTECT,
         related_name='task_set'
+    )
+    tags = models.ManyToManyField(
+        Tag,
+        related_name='tasks',
+        blank=True,
+        verbose_name='Метки'
     )
     time_create = models.DateTimeField(auto_now_add=True)
 

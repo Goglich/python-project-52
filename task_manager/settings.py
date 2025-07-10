@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'task_manager',
     'User',
     'status',
-    'task'
+    'task',
+    'tag'
 ]
 
 MIDDLEWARE = [
