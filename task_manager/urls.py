@@ -20,7 +20,7 @@ from .views import HomePageView
 from User.views import IndexView, RegistrationView, LoginUserView, LogoutUserView, UserEditView, UserDeleteView
 from status.views import StatusView, CreateStatusView, EditStatusView, StatusDeleteView
 from task.views import TaskView, ShowTaskView, CreateTaskView, EditTaskView, DeleteTaskView
-from tag.views import TagsView, CreateTagView, EditTagView, DeleteTagView
+from label.views import LabelsView, CreateLabelView, EditLabelView, DeleteLabelView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,8 +40,8 @@ urlpatterns = [
     path('tasks/create/', CreateTaskView.as_view(), name='tasks_create'),
     path('tasks/<int:task_id>/update/', EditTaskView.as_view(), name='edit_task'),
     path('tasks/<int:task_id>/delete/', DeleteTaskView.as_view(), name='delete_task'),
-    path('tags/', TagsView.as_view(), name='tags'),
-    path('tags/create/', CreateTagView.as_view()),
-    path('tags/<int:tag_id>/update/', EditTagView.as_view(), name='edit_tag'),
-    path('tags/<int:tag_id>/delete/', DeleteTagView.as_view(), name='delete_tag'),
+    path('labels/', LabelsView.as_view(), name='labels'),
+    path('labels/create/', CreateLabelView.as_view(), name='create_label'),
+    path('labels/<int:label_id>/update/', EditLabelView.as_view(), name='edit_label'),
+    path('labels/<int:label_id>/delete/', DeleteLabelView.as_view(), name='delete_label'),
 ]

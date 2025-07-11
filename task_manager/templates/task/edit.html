@@ -63,21 +63,21 @@
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label for="id_tags" class="form-label fw-bold">Метки</label>
-                    <select class="form-select" id="id_tags" name="tags" multiple size="4">
-                        {% for tag in form.tags.field.queryset %}
-                            <option value="{{ tag.id }}" 
-                                {% if tag.id in form.tags.value %}selected{% endif %}>
-                                {{ tag.name }}
+                    <label for="id_labels" class="form-label fw-bold">Метки</label>
+                    <select class="form-select" id="id_labels" name="labels" multiple size="4">
+                        {% for label in form.labels.field.queryset %}
+                            <option value="{{ label.id }}" 
+                                {% if label.id in form.labels.value %}selected{% endif %}>
+                                {{ label.name }}
                             </option>
                         {% endfor %}
                     </select>
                     <small class="form-text text-muted">
                         Для выбора нескольких меток удерживайте Ctrl (Windows) или Command (Mac)
                     </small>
-                    {% if form.tags.errors %}
+                    {% if form.labels.errors %}
                         <div class="invalid-feedback d-block">
-                            {{ form.tags.errors }}
+                            {{ form.labels.errors }}
                         </div>
                     {% endif %}
                 </div>

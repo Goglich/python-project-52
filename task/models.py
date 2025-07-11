@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from status.models import Status
-from tag.models import Tag
+from label.models import Label
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
@@ -23,8 +23,8 @@ class Task(models.Model):
         on_delete=models.PROTECT,
         related_name='task_set'
     )
-    tags = models.ManyToManyField(
-        Tag,
+    labels = models.ManyToManyField(
+        Label,
         related_name='tasks',
         blank=True,
         verbose_name='Метки'

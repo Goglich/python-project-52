@@ -1,17 +1,17 @@
 from django import forms
 from .models import Task
-from tag.models import Tag
+from label.models import Label
 from status.models import Status
 from django.contrib.auth.models import User
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description', 'status', 'assignee', 'tags']
+        fields = ['name', 'description', 'status', 'assignee', 'labels']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
-            'tags': forms.SelectMultiple(attrs={'class': 'form-select'}),
+            'labels': forms.SelectMultiple(attrs={'class': 'form-select'}),
         }
     
     def __init__(self, *args, **kwargs):
@@ -20,10 +20,10 @@ class TaskForm(forms.ModelForm):
         
         self.fields['status'].queryset = Status.objects.all()
         self.fields['assignee'].queryset = User.objects.all()
-        self.fields['tags'].queryset = Tag.objects.all()
+        self.fields['labels'].queryset = Label.objects.all()
         
         for field_name, field in self.fields.items():
-            if field_name in ['status', 'assignee', 'tags']:
+            if field_name in ['status', 'assignee', 'labels']:
                 field.widget.attrs.update({'class': 'form-select'})
             elif not isinstance(field.widget, forms.CheckboxInput):
                 if 'class' not in field.widget.attrs:

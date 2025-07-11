@@ -1,11 +1,11 @@
 from django import forms
-from .models import Tag
+from .models import Label
 
-class TagForm(forms.ModelForm):
+class LabelForm(forms.ModelForm):
     name = forms.CharField(label="Имя", widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = Tag
+        model = Label
         fields = ['name']
         labels = {
             'name': "Имя",

@@ -15,7 +15,7 @@
         {% endif %}
         <div class="">
             <h1 class="my-4">Метки</h1>
-            <a href="/tags/create/"><button type="button" class="btn btn-outline-primary me-2">Создать метку</button></a>
+            <a href="/labels/create/"><button type="button" class="btn btn-outline-primary me-2">Создать метку</button></a>
         </div>
         <table class="table table-striped">
             <thead>
@@ -27,15 +27,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for tag in tags %}
+                {% for label in labels %}
                 <tr>
-                    <td>{{ tag.id }}</td>
-                    <td>{{ tag.name }}</td>
-                    <td>{{ tag.time_create|date:"d.m.Y H:i" }}</td>
+                    <td>{{ label.id }}</td>
+                    <td>{{ label.name }}</td>
+                    <td>{{ label.time_create|date:"d.m.Y H:i" }}</td>
                     <td>
-                        <a href="/tags/{{ tag.id }}/update/">Изменить</a>
+                        <a href="/labels/{{ label.id }}/update/">Изменить</a>
                         <br>
-                        <a href="/tags/{{ tag.id }}/delete/">Удалить</a>
+                        <a href="/labels/{{ label.id }}/delete/">Удалить</a>
                     </td>
                 </tr>
                 {% endfor %}

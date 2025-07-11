@@ -37,10 +37,10 @@
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label for="id_tags" class="form-label">Метки</label>
-                    <select name="tags" id="id_tags" class="form-select" multiple size="4">
-                        {% for tag in form.tags.field.queryset %}
-                        <option value="{{ tag.pk }}">{{ tag.name }}</option>
+                    <label for="id_labels" class="form-label">Метки</label>
+                    <select name="labels" id="id_labels" class="form-select" multiple size="4">
+                        {% for label in form.labels.field.queryset %}
+                        <option value="{{ label.pk }}">{{ label.name }}</option>
                         {% endfor %}
                     </select>
                     <div class="form-text">Для выбора нескольких меток удерживайте Ctrl (Windows) или Command (Mac)</div>
