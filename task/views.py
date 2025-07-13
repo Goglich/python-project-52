@@ -24,7 +24,7 @@ class TaskView(ListView):
         label = self.request.GET.get('label')
         self_tasks = self.request.GET.get('self_tasks')
         if status:
-            queryset = queryset.filter(status_id=status)
+            queryset = queryset.filter(status_id=int(status))
         if executor is not None:
             if executor == '':
                 queryset = queryset.filter(executor__isnull=True)
