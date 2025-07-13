@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from status.models import Status
+from label.models import Label
 from task.models import Task
 from task.forms import TaskForm
 
@@ -23,7 +24,6 @@ class TaskCRUDTests(TestCase):
             author=self.user1,
             status=self.status
         )
-        
         self.client = Client()
         
     def test_task_list_view(self):
@@ -52,7 +52,7 @@ class TaskCRUDTests(TestCase):
             'name': 'New Task',
             'description': 'New Description',
             'status': self.status.id,
-            'assignee': self.user2.id
+            'executor': self.user2.id
         }
         
         response = self.client.post(reverse('tasks_create'), data)
@@ -87,7 +87,7 @@ class TaskCRUDTests(TestCase):
             'name': 'Updated Task',
             'description': 'Updated Description',
             'status': self.status.id,
-            'assignee': self.user2.id
+            'executor': self.user2.id
         }
         
         response = self.client.post(
@@ -135,7 +135,7 @@ class TaskCRUDTests(TestCase):
             'name': 'Form Task',
             'description': 'Form Description',
             'status': self.status.id,
-            'assignee': self.user2.id
+            'executor': self.user2.id
         }
         
         form = TaskForm(data=form_data, user=self.user1)
@@ -163,3 +163,131 @@ def test_unauthenticated_access(self):
         
         if url != reverse('tasks_create'):
             self.assertIn('next=', response.url)
+
+
+class TaskFilterTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user1 = User.objects.create_user(
+            username='user1',
+            password='testpass123',
+            first_name='User1',
+            last_name='Test'
+        )
+        cls.user2 = User.objects.create_user(
+            username='user2',
+            password='testpass123',
+            first_name='User2',
+            last_name='Test'
+        )
+        
+        cls.status1 = Status.objects.create(name='Статус 1')
+        cls.status2 = Status.objects.create(name='Статус 2')
+        cls.label1 = Label.objects.create(name='Метка 1')
+        cls.label2 = Label.objects.create(name='Метка 2')
+        cls.task1 = Task.objects.create(
+            name='Задача 1',
+            description='Описание задачи 1',
+            author=cls.user1,
+            executor=cls.user2,
+            status=cls.status1
+        )
+        cls.task1.labels.add(cls.label1)
+        cls.task2 = Task.objects.create(
+            name='Задача 2',
+            description='Описание задачи 2',
+            author=cls.user2,
+            executor=None,
+            status=cls.status2
+        )
+        cls.task2.labels.add(cls.label2)
+        cls.task3 = Task.objects.create(
+            name='Задача 3',
+            description='Описание задачи 3',
+            author=cls.user1,
+            executor=cls.user1,
+            status=cls.status1
+        )
+        cls.task3.labels.add(cls.label1, cls.label2)
+
+    def setUp(self):
+        self.client = Client()
+        self.client.force_login(self.user1)
+
+    def test_filter_by_status(self):
+        response = self.client.get(reverse('tasks'), {'status': self.status1.id})
+        self.assertEqual(response.status_code, 200)
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 2)
+        self.assertIn(self.task1, tasks)
+        self.assertIn(self.task3, tasks)
+        response = self.client.get(reverse('tasks'), {'status': self.status2.id})
+        self.assertEqual(response.status_code, 200)
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 1)
+        self.assertIn(self.task2, tasks)
+
+    def test_filter_by_executor(self):
+        response = self.client.get(reverse('tasks'))
+        self.assertEqual(len(response.context['tasks']), 3)
+        response = self.client.get(reverse('tasks'), {'executor': self.user2.id})
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 1, 
+            f"Ожидалась 1 задача, получено {len(tasks)}. Задачи: {list(tasks)}")
+        self.assertIn(self.task1, tasks)
+        self.assertNotIn(self.task2, tasks)
+        self.assertNotIn(self.task3, tasks)
+        response = self.client.get(reverse('tasks'), {'executor': self.user1.id})
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 1)
+        self.assertIn(self.task3, tasks)
+        response = self.client.get(reverse('tasks'), {'executor': ''})
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 1)
+        self.assertIn(self.task2, tasks)
+
+    def test_filter_self_tasks(self):
+        response = self.client.get(reverse('tasks'), {'self_tasks': 'on'})
+        self.assertEqual(response.status_code, 200)
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 2)
+        self.assertIn(self.task1, tasks)
+        self.assertIn(self.task3, tasks)
+        self.assertNotIn(self.task2, tasks)
+
+    def test_combined_filters(self):
+        response = self.client.get(reverse('tasks'), {
+            'status': self.status1.id,
+            'label': self.label1.id,
+            'self_tasks': 'on'
+        })
+        self.assertEqual(response.status_code, 200)
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 2)
+        self.assertIn(self.task1, tasks)
+        self.assertIn(self.task3, tasks)
+        response = self.client.get(reverse('tasks'), {
+            'status': self.status1.id,
+            'label': self.label2.id
+        })
+        self.assertEqual(response.status_code, 200)
+        tasks = response.context['tasks']
+        self.assertEqual(len(tasks), 1)
+        self.assertIn(self.task3, tasks)
+
+    def test_filter_form_in_context(self):
+        response = self.client.get(reverse('tasks'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('filter_form', response.context)
+        self.assertEqual(len(response.context['filter_form'].fields), 4)
+
+    def test_reset_filters(self):
+        response = self.client.get(reverse('tasks'), {
+            'status': self.status1.id,
+            'label': self.label1.id,
+            'self_tasks': 'on'
+        })
+        self.assertEqual(len(response.context['tasks']), 2)
+        
+        response = self.client.get(reverse('tasks'))
+        self.assertEqual(len(response.context['tasks']), 3)

@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container wrapper flex-grow-1">
-    <div class="modal modal-sheet position-static d-block  p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+    <div class="modal modal-sheet position-static d-block  p-4 py-md-4" tabindex="-1" role="dialog" id="modalSignin">
         {% if messages %}
         <div class="mb-4">
             {% for message in messages %}
@@ -14,10 +14,48 @@
         </div>
         {% endif %}
         <div class="">
-            <h1 class="my-4">Задачи</h1>
-            <a href="/tasks/create/"><button type="button" class="btn btn-outline-primary me-2">Создать
+            <h1 class="my-6">Задачи</h1>
+            <a href="/tasks/create/"><button type="button" class="btn btn-outline-primary me-2 mb-3">Создать
                     задачу</button></a>
         </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="{{ filter_form.status.id_for_label }}" class="form-label">
+                            {{ filter_form.status.label }}
+                        </label>
+                        {{ filter_form.status }}
+                    </div>
+                    <div class="col-md-3">
+                        <label for="{{ filter_form.executor.id_for_label }}" class="form-label">
+                            {{ filter_form.executor.label }}
+                        </label>
+                        {{ filter_form.executor }}
+                    </div>
+                    <div class="col-md-3">
+                        <label for="{{ filter_form.label.id_for_label }}" class="form-label">
+                            {{ filter_form.label.label }}
+                        </label>
+                        {{ filter_form.label }}
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check mt-4 pt-3">
+                            {{ filter_form.self_tasks }}
+                            <label for="{{ filter_form.self_tasks.id_for_label }}" class="form-check-label">
+                                {{ filter_form.self_tasks.label }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Применить фильтр</button>
+                        <a href="{% url 'tasks' %}" class="btn btn-outline-secondary">Сбросить</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -38,8 +76,8 @@
                     <td>{{ task.status.name }}</td>
                     <td>{{ task.author.first_name }} {{ task.author.last_name }}</td>
                     <td>
-                        {% if task.assignee %}
-                        {{ task.assignee.first_name }} {{ task.assignee.last_name }}
+                        {% if task.executor %}
+                        {{ task.executor.first_name }} {{ task.executor.last_name }}
                         {% else %}
                         Не назначен
                         {% endif %}

@@ -46,18 +46,18 @@
                         {% endif %}
                     </div>
                     <div class="col-md-6">
-                        <label for="id_assignee" class="form-label fw-bold">Исполнитель</label>
-                        <select class="form-select" id="id_assignee" name="assignee">
+                        <label for="id_executor" class="form-label fw-bold">Исполнитель</label>
+                        <select class="form-select" id="id_executor" name="executor">
                             <option value="">Не назначен</option>
-                            {% for user in form.assignee.field.queryset %}
-                                <option value="{{ user.id }}" {% if form.assignee.value == user.id %}selected{% endif %}>
+                            {% for user in form.executor.field.queryset %}
+                                <option value="{{ user.id }}" {% if form.executor.value == user.id %}selected{% endif %}>
                                     {{ user.first_name }} {{ user.last_name }}
                                 </option>
                             {% endfor %}
                         </select>
-                        {% if form.assignee.errors %}
+                        {% if form.executor.errors %}
                             <div class="invalid-feedback d-block">
-                                {{ form.assignee.errors }}
+                                {{ form.executor.errors }}
                             </div>
                         {% endif %}
                     </div>

@@ -11,12 +11,12 @@ class Task(models.Model):
         on_delete=models.PROTECT,
         related_name='authored_tasks'
     )
-    assignee = models.ForeignKey(
+    executor = models.ForeignKey(
         User, 
         on_delete=models.PROTECT,
         null=True, 
         blank=True, 
-        related_name='assigned_tasks'
+        related_name='executed_tasks'
     )
     status = models.ForeignKey(
         Status,

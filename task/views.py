@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, View, UpdateView
-from .forms import TaskForm
+from .forms import TaskForm, TaskFilterForm
 from .models import Task
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -18,7 +18,28 @@ class TaskView(ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Task.objects.select_related('status', 'author', 'assignee').order_by('time_create')
+        queryset = Task.objects.select_related('status', 'author', 'executor').order_by('time_create')
+        status = self.request.GET.get('status')
+        executor = self.request.GET.get('executor')
+        label = self.request.GET.get('label')
+        self_tasks = self.request.GET.get('self_tasks')
+        if status:
+            queryset = queryset.filter(status_id=status)
+        if executor is not None:
+            if executor == '':
+                queryset = queryset.filter(executor__isnull=True)
+            else:
+                queryset = queryset.filter(executor_id=int(executor))
+        if label:
+            queryset = queryset.filter(labels__id=label).distinct()
+        if self_tasks:
+            queryset = queryset.filter(author=self.request.user)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = TaskFilterForm(self.request.GET)
+        return context
 
 
 class CreateTaskView(View):
@@ -55,6 +76,7 @@ class ShowTaskView(View):
     def get(self, request, *args, **kwargs):
         task_to_show = self.get_object()
         return render(request, 'task/show_task.html', {'task': task_to_show})
+
 
 class EditTaskView(UpdateView):
     model = Task

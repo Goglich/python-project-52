@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description', 'status', 'assignee', 'labels']
+        fields = ['name', 'description', 'status', 'executor', 'labels']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
@@ -19,11 +19,11 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         self.fields['status'].queryset = Status.objects.all()
-        self.fields['assignee'].queryset = User.objects.all()
+        self.fields['executor'].queryset = User.objects.all()
         self.fields['labels'].queryset = Label.objects.all()
         
         for field_name, field in self.fields.items():
-            if field_name in ['status', 'assignee', 'labels']:
+            if field_name in ['status', 'executor', 'labels']:
                 field.widget.attrs.update({'class': 'form-select'})
             elif not isinstance(field.widget, forms.CheckboxInput):
                 if 'class' not in field.widget.attrs:
@@ -41,3 +41,29 @@ class TaskForm(forms.ModelForm):
             instance.save()
             self.save_m2m()
         return instance
+
+
+class TaskFilterForm(forms.Form):
+    status = forms.ModelChoiceField(
+        queryset=Status.objects.all(),
+        required=False,
+        label='Статус',
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    executor = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+        label='Исполнитель',
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    label = forms.ModelChoiceField(
+        queryset=Label.objects.all(),
+        required=False,
+        label='Метка',
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    self_tasks = forms.BooleanField(
+        required=False,
+        label='Только свои задачи',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )

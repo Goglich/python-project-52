@@ -44,8 +44,8 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>Исполнитель:</span>
                                     <span>
-                                        {% if task.assignee %}
-                                        {{ task.assignee.first_name }} {{ task.assignee.last_name }}
+                                        {% if task.executor %}
+                                        {{ task.executor.first_name }} {{ task.executor.last_name }}
                                         {% else %}
                                         <span class="text-muted">Не назначен</span>
                                         {% endif %}
