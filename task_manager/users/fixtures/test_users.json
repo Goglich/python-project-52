@@ -1,0 +1,26 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "test_user1",
+      "password": "pbkdf2_sha256$qwerty"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "test_user2",
+      "password": "pbkdf2_sha256$123456"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "test_user3",
+      "password": "pbkdf2_sha256$qwe123"
+    }
+  }
+]

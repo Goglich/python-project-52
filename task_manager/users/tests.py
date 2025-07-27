@@ -2,8 +2,16 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
+import pytest
 
 User = get_user_model()
+
+@pytest.mark.django_db
+def test_load_users(self, transactional_db, django_user_model):
+    from django.core.management import call_command
+    call_command('loaddata', 'test_users.json')
+    users = django_user_model.objects.all()
+    assert len(users) == 3
 
 class UserCRUDTests(TestCase):
     def setUp(self):
