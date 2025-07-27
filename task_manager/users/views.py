@@ -39,6 +39,7 @@ class RegistrationView(CreateView):
         user = form.save(commit=False)
         user.set_password(form.cleaned_data['password'])
         user.save()
+        messages.success(self.request, 'Пользователь успешно зарегистрирован')
         return super().form_valid(form)
 
 
@@ -106,14 +107,14 @@ class UserDeleteView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user_to_delete = self.get_object()
         if request.user.id != user_to_delete.id:
-            messages.error(request, 'У вас нет прав для удаления другого пользователя')
+            messages.error(request, 'У вас нет прав для изменения другого пользователя.')
             return redirect(self.success_url)
         return render(request, self.template_name, {'user': user_to_delete})
 
     def post(self, request, *args, **kwargs):
         user_to_delete = self.get_object()
         if request.user.id != user_to_delete.id:
-            messages.error(request, 'У вас нет прав для удаления другого пользователя')
+            messages.error(request, 'У вас нет прав для изменения другого пользователя.')
             return redirect(self.success_url)
         username = user_to_delete.username
         user_to_delete.delete()
