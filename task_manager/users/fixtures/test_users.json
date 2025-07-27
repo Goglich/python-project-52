@@ -3,24 +3,54 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
+      "password": "pbkdf2_sha256$260000$HASHqweqwe",
+      "last_login": null,
+      "is_superuser": false,
       "username": "test_user1",
-      "password": "pbkdf2_sha256$qwerty"
+      "first_name": "Test",
+      "last_name": "User1",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-01-01T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
     }
   },
   {
     "model": "auth.user",
     "pk": 2,
     "fields": {
+      "password": "pbkdf2_sha256$260000$HASHqweqwe",
+      "last_login": null,
+      "is_superuser": false,
       "username": "test_user2",
-      "password": "pbkdf2_sha256$123456"
+      "first_name": "Test2",
+      "last_name": "User2",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-01-01T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
     }
   },
   {
     "model": "auth.user",
-    "pk": 3,
+    "pk": 1,
     "fields": {
+      "password": "pbkdf2_sha256$260000$HASHqweqwe",
+      "last_login": null,
+      "is_superuser": false,
       "username": "test_user3",
-      "password": "pbkdf2_sha256$qwe123"
+      "first_name": "Test3",
+      "last_name": "User3",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-01-01T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
     }
   }
 ]
