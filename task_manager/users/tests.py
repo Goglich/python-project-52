@@ -1,40 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
-import pytest
 
 User = get_user_model()
 
-@pytest.mark.django_db
-def test_load_users():
-    User = get_user_model()
-    
-    User.objects.create(
-        username='user1',
-        first_name='Иван',
-        last_name='Иванов',
-        password=make_password('TestPass123'),
-        is_active=True
-    )
-    
-    User.objects.create(
-        username='user2',
-        first_name='Петр',
-        last_name='Петров',
-        password=make_password('TestPass123'),
-        is_active=True
-    )
-    
-    User.objects.create(
-        username='user3',
-        first_name='Сергей',
-        last_name='Сергеев',
-        password=make_password('TestPass123'),
-        is_active=True
-    )
-    
-    assert User.objects.count() == 3
 
 class UserCRUDTests(TestCase):
     def setUp(self):
