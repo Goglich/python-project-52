@@ -1,10 +1,10 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from status.models import Status
-from label.models import Label
-from task.models import Task
-from task.forms import TaskForm
+from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
+from task_manager.tasks.models import Task
+from task_manager.tasks.forms import TaskForm
 
 class TaskCRUDTests(TestCase):
     def setUp(self):

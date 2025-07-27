@@ -1,7 +1,7 @@
 from django import forms
 from .models import Task
-from label.models import Label
-from status.models import Status
+from task_manager.labels.models import Label
+from task_manager.statuses.models import Status
 from django.contrib.auth.models import User
 
 class TaskForm(forms.ModelForm):

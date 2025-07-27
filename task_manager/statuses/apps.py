@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class LabelConfig(AppConfig):
+class StatusesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'label'
+    name = 'task_manager.statuses'

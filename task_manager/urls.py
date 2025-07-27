@@ -17,10 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import HomePageView
-from User.views import IndexView, RegistrationView, LoginUserView, LogoutUserView, UserEditView, UserDeleteView
-from status.views import StatusView, CreateStatusView, EditStatusView, StatusDeleteView
-from task.views import TaskView, ShowTaskView, CreateTaskView, EditTaskView, DeleteTaskView
-from label.views import LabelsView, CreateLabelView, EditLabelView, DeleteLabelView
+from task_manager.users.views import IndexView, RegistrationView, LoginUserView, LogoutUserView, UserEditView, UserDeleteView
+from task_manager.statuses.views import StatusView, CreateStatusView, EditStatusView, StatusDeleteView
+from task_manager.tasks.views import TaskView, ShowTaskView, CreateTaskView, EditTaskView, DeleteTaskView
+from task_manager.labels.views import LabelsView, CreateLabelView, EditLabelView, DeleteLabelView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from status.models import Status
-from label.models import Label
+from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
