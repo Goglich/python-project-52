@@ -1,17 +1,19 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.contrib.messages import get_messages
+from django.core.management import call_command
 import pytest
 
 User = get_user_model()
 
-@pytest.mark.django_db
-def test_load_users(self, transactional_db, django_user_model):
-    from django.core.management import call_command
-    call_command('loaddata', 'test_users.json')
-    users = django_user_model.objects.all()
-    assert len(users) == 3
+class TestUser:
+    @pytest.mark.django_db
+    def test_load_users(self):
+        call_command('loaddata', 'test_users.json')
+        
+        users = get_user_model().objects.all()
+        assert len(users) == 3
+
 
 class UserCRUDTests(TestCase):
     def setUp(self):
@@ -35,7 +37,7 @@ class UserCRUDTests(TestCase):
         self.edit_user_url = reverse('edit_user', args=[self.user.id])
         self.delete_user_url = reverse('delete_user', args=[self.user.id])
 
-    # Create (Registration) Tests
+
     def test_user_registration_success(self):
         response = self.client.post(self.create_user_url, data=self.user_data)
         self.assertEqual(response.status_code, 302)
@@ -49,7 +51,7 @@ class UserCRUDTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username='testuser').exists())
 
-    # Update (Edit) Tests
+
     def test_user_edit_authenticated(self):
         self.client.login(username='existinguser', password='existingpass123')
         updated_data = {
@@ -78,6 +80,7 @@ class UserCRUDTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(self.login_url))
 
+
     def test_user_edit_other_user(self):
         other_user = User.objects.create_user(
             username='otheruser',
@@ -95,7 +98,7 @@ class UserCRUDTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.users_list_url)
 
-    # Delete Tests
+
     def test_user_delete_authenticated(self):
         self.client.login(username='existinguser', password='existingpass123')
         response = self.client.post(self.delete_user_url)
