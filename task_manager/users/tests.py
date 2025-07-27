@@ -5,22 +5,33 @@ import pytest
 
 User = get_user_model()
 
-@pytest.fixture
-def test_users():
-    users = [
-        User.objects.create_user(
-            username=f'test_user{i}',
-            first_name=f'Test{i}',
-            last_name=f'User{i}',
-            password='testpass123'
-        ) for i in range(1, 4)
-    ]
-    return users
+class TestUser:
+    def setUp(self):
+        self.user1 = User.objects.create_user(
+            username='user1',
+            first_name='John',
+            last_name='Doe',
+            password='test123'
+        )
+        
+        self.user2 = User.objects.create_user(
+            username='user2',
+            first_name='Paul',
+            last_name='Mauriet',
+            password='test123'
+        )
 
-@pytest.mark.django_db
-def test_load_users(test_users):
-    users = User.objects.all()
-    assert len(users) == 3
+        self.user3 = User.objects.create_user(
+            username='user3',
+            first_name='Barak',
+            last_name='Obama',
+            password='test123'
+        )
+
+    @pytest.mark.django_db
+    def test_load_users(self):
+        users = get_user_model().objects.all()
+        assert len(users) == 3
 
 class UserCRUDTests(TestCase):
     def setUp(self):
