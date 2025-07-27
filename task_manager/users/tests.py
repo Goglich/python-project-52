@@ -1,19 +1,26 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.core.management import call_command
 import pytest
 
 User = get_user_model()
 
-class TestUser:
-    @pytest.mark.django_db
-    def test_load_users(self):
-        call_command('loaddata', 'test_users.json')
-        
-        users = get_user_model().objects.all()
-        assert len(users) == 3
+@pytest.fixture
+def test_users():
+    users = [
+        User.objects.create_user(
+            username=f'test_user{i}',
+            first_name=f'Test{i}',
+            last_name=f'User{i}',
+            password='testpass123'
+        ) for i in range(1, 4)
+    ]
+    return users
 
+@pytest.mark.django_db
+def test_load_users(test_users):
+    users = User.objects.all()
+    assert len(users) == 3
 
 class UserCRUDTests(TestCase):
     def setUp(self):
