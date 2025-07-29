@@ -59,7 +59,7 @@ class LogoutUserView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         messages.info(request, 'Вы разлогинены')
         logout(request)
-        return redirect('login')
+        return redirect('main_page')
 
 
 class UserEditView(LoginRequiredMixin, UpdateView):
