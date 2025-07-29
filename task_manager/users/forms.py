@@ -2,21 +2,49 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 
-class RegisterUserForm(forms.ModelForm):
-    first_name = forms.CharField(label="Имя", widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(label="Фамилия", widget=forms.TextInput(attrs={'class': 'form-control'}))
-    username = forms.CharField(label="Имя пользователя", widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(label="Пароль", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(label="Повтор пароля", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+class RegisterUserForm(UserCreationForm):
+    first_name = forms.CharField(
+        label="Имя",
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    last_name = forms.CharField(
+        label="Фамилия",
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    username = forms.CharField(
+        label="Имя пользователя",
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    password1 = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    password2 = forms.CharField(
+        label="Подтверждение пароля",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ['first_name', 'last_name', 'username', 'password', 'password2']
-        labels = {
-            'first_name': "Имя",
-            'last_name': "Фамилия",
-        }
+        fields = ('username', 'first_name', 'last_name', 'password1', 'password2')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Пароли не совпадают!")
+        
+        return cleaned_data
 
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(

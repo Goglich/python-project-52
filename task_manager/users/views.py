@@ -31,16 +31,15 @@ class RegistrationView(CreateView):
     form_class = RegisterUserForm
     template_name = 'user/create.html'
     success_url = reverse_lazy('login')
-    
+
     def form_valid(self, form):
-        if form.cleaned_data['password'] != form.cleaned_data['password2']:
-            form.add_error('password2', "Пароли не совпадают")
-            return self.form_invalid(form)
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])
-        user.save()
+        response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
-        return super().form_valid(form)
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Исправьте ошибки в форме')
+        return super().form_invalid(form)
 
 
 class LoginUserView(LoginView):
