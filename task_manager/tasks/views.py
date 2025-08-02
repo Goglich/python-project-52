@@ -129,5 +129,5 @@ class DeleteTaskView(View):
             return redirect(self.success_url)
         task = task_to_delete.name
         task_to_delete.delete()
-        messages.success(request, f'Задача {task} успешно удалена')
+        messages.success(request, f'Задача успешно удалена')
         return redirect(self.success_url)

@@ -73,6 +73,7 @@ class EditLabelView(UpdateView):
         self.object = self.get_object()
         if self.object is None:
             return redirect(self.success_url)
+        messages.success('Метка успешно изменена')
         return super().post(request, *args, **kwargs)
     
 
@@ -99,7 +100,7 @@ class DeleteLabelView(View):
         label_name = label_to_delete.name
         try:
             label_to_delete.delete()
-            messages.success(request, f'Метка {label_name} успешно удалена')
+            messages.success(request, f'Метка успешно удалена')
             return redirect(self.success_url)
         except ProtectedError:
             messages.error(request, 'Нельзя удалить метку, так как она связана с задачами.')
