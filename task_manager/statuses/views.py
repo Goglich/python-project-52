@@ -73,6 +73,7 @@ class EditStatusView(UpdateView):
         self.object = self.get_object()
         if self.object is None:
             return redirect(self.success_url)
+        messages.success(request, f'Статус успешно изменен')
         return super().post(request, *args, **kwargs)
     
 
@@ -99,7 +100,7 @@ class StatusDeleteView(View):
         status_name = status_to_delete.name
         try:
             status_to_delete.delete()
-            messages.success(request, f'Статус {status_name} успешно удален')
+            messages.success(request, f'Статус успешно удален')
             return redirect(self.success_url)
         except ProtectedError:
             messages.error(request, 'Нельзя удалить статус, так как он связан с задачами.')
