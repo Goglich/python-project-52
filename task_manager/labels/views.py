@@ -73,7 +73,7 @@ class EditLabelView(UpdateView):
         self.object = self.get_object()
         if self.object is None:
             return redirect(self.success_url)
-        messages.success('Метка успешно изменена')
+        messages.success(request, 'Метка успешно изменена')
         return super().post(request, *args, **kwargs)
     
 

@@ -33,12 +33,13 @@ class RegistrationView(CreateView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        user = form.save(commit=False)
+        user.save()
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
-        return response
+        return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Исправьте ошибки в форме')
+        messages.error(self.request, f'Исправьте ошибки в форме: {form.errors}')
         return super().form_invalid(form)
 
 
@@ -103,6 +104,12 @@ class UserDeleteView(LoginRequiredMixin, View):
     def get_object(self):
         user_id = self.kwargs.get('user_id')
         return get_object_or_404(User, pk=user_id)
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         user_to_delete = self.get_object()

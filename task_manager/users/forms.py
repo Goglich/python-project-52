@@ -43,8 +43,14 @@ class RegisterUserForm(UserCreationForm):
 
         if password1 and password2 and password1 != password2:
             raise ValidationError("Пароли не совпадают!")
-        
+
         return cleaned_data
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if get_user_model().objects.filter(username=username).exists():
+            raise ValidationError("Пользователь с таким именем уже существует")
+        return username
 
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(
@@ -88,21 +94,21 @@ class UserEditForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['first_name', 'last_name', 'username']
+        fields = ['first_name', 'last_name', 'username', 'password1', 'password2']
 
     def clean(self):
         cleaned_data = super().clean()
-        password = cleaned_data.get('password')
+        password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')
-        if password and password2 and password != password2:
+        if password1 and password2 and password1 != password2:
             raise ValidationError("Пароли не совпадают!")
         return cleaned_data
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        password = self.cleaned_data.get('password')
-        if password:
-            user.set_password(password)
+        password1 = self.cleaned_data.get('password1')
+        if password1:
+            user.set_password(password1)
         if commit:
             user.save()
         return user

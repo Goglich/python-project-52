@@ -91,7 +91,7 @@ class LabelCRUDTest(TestCase):
         self.assertRedirects(response, self.labels_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Метка Test Label успешно удалена')
+        self.assertEqual(str(messages[0]), 'Метка успешно удалена')
         self.assertFalse(Label.objects.filter(id=self.label.id).exists())
 
 
