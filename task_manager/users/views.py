@@ -118,5 +118,5 @@ class UserDeleteView(LoginRequiredMixin, View):
             return redirect(self.success_url)
         username = user_to_delete.username
         user_to_delete.delete()
-        messages.success(request, f'Пользователь {username} успешно удален')
+        messages.success(request, f'Пользователь успешно удален')
         return redirect(self.success_url)
