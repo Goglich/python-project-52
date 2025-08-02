@@ -8,27 +8,27 @@ from django.contrib.auth.forms import UserCreationForm
 class RegisterUserForm(UserCreationForm):
     first_name = forms.CharField(
         label="Имя",
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Имя'}),
         required=True
     )
     last_name = forms.CharField(
         label="Фамилия",
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Фамилия'}),
         required=True
     )
     username = forms.CharField(
         label="Имя пользователя",
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Имя пользователя'}),
         required=True
     )
     password1 = forms.CharField(
         label="Пароль",
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Пароль'}),
         required=True
     )
     password2 = forms.CharField(
         label="Подтверждение пароля",
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Подтверждение пароля'}),
         required=True
     )
 
@@ -49,11 +49,11 @@ class RegisterUserForm(UserCreationForm):
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(
         label="Имя пользователя", 
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Имя пользователя'})
     )
     password = forms.CharField(
         label="Пароль", 
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Пароль'})
     )
     
     def __init__(self, *args, **kwargs):
