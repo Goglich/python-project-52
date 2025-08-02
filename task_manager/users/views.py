@@ -92,6 +92,7 @@ class UserEditView(LoginRequiredMixin, UpdateView):
         self.object = self.get_object()
         if self.object is None:
             return redirect(self.success_url)
+        messages.success(request, f'Пользователь успешно изменен')
         return super().post(request, *args, **kwargs)
     
 
