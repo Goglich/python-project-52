@@ -10,6 +10,7 @@ from django.views.generic import ListView, CreateView, View, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 
+
 # Create your views here.
 class IndexView(ListView):
     model = User
@@ -63,7 +64,7 @@ class LogoutUserView(LoginRequiredMixin, View):
         return redirect('main_page')
 
 
-class UserEditView(LoginRequiredMixin, UpdateView):
+class UserEditView(UpdateView):
     model = User
     form_class = UserEditForm
     template_name = 'user/edit.html'
@@ -89,13 +90,10 @@ class UserEditView(LoginRequiredMixin, UpdateView):
             return redirect(self.success_url)
         return super().get(request, *args, **kwargs)
     
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object is None:
-            return redirect(self.success_url)
-        messages.success(request, f'Пользователь успешно изменен')
-        return super().post(request, *args, **kwargs)
-    
+    def form_valid(self, form):
+        self.object = form.save()
+        messages.success(self.request, 'Пользователь успешно изменен')
+        return redirect(self.success_url)
 
 class UserDeleteView(LoginRequiredMixin, View):
     success_url = reverse_lazy('users')

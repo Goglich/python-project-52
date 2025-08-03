@@ -18,7 +18,7 @@
 ### Installation  & Launching
 1. Clone the repo:
 ```bash
-git clone https://github.com/AlishaEvergreen/python-project-52.git
+git clone https://github.com/Goglich/python-project-52.git
 cd python-project-52
 ```
 2. Install dependencies:
