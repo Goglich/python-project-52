@@ -89,12 +89,15 @@ class UserEditView(UpdateView):
         if self.object is None:
             return redirect(self.success_url)
         return super().get(request, *args, **kwargs)
-    
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, 'Пользователь успешно изменен')
-        return redirect(self.success_url)
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object is None:
+            return redirect(self.success_url)
+        messages.success(request, f'Пользователь успешно изменен')
+        return super().post(request, *args, **kwargs)
+
+    
 class UserDeleteView(LoginRequiredMixin, View):
     success_url = reverse_lazy('users')
     template_name = 'user/user_confirm_delete.html'

@@ -104,11 +104,11 @@ class UserEditForm(forms.ModelForm):
             raise ValidationError("Пароли не совпадают!")
         return cleaned_data
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        password1 = self.cleaned_data.get('password1')
-        if password1:
-            user.set_password(password1)
-        if commit:
-            user.save()
-        return user
+    #def save(self, commit=True):
+    #    user = super().save(commit=False)
+    #    password1 = self.cleaned_data.get('password1')
+    #    if password1:
+    #        user.set_password(password1)
+    #    if commit:
+    #        user.save()
+    #    return user
