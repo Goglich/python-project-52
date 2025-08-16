@@ -19,7 +19,7 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         self.fields['status'].queryset = Status.objects.all()
-        self.fields['executor'].queryset = User.objects.all()
+        self.fields['executor'].queryset = User.objects.filter(is_active=True).order_by('username')
         self.fields['labels'].queryset = Label.objects.all()
         
         for field_name, field in self.fields.items():
