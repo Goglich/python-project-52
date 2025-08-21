@@ -53,7 +53,7 @@
                     <label for="id_labels" class="form-label fw-bold">Метки</label>
                     <select name="labels" id="id_labels" class="form-select" multiple size="4">
                         {% for label in form.labels.field.queryset %}
-                        <option value="{{ label.pk }}">{{ label.name }}</option>
+                        <option value="{{ label.pk }}" {% if label.id in form.labels.value %}selected{% endif %}>{{ label.name }}</option>
                         {% endfor %}
                     </select>
                     <small class="form-text text-muted">
