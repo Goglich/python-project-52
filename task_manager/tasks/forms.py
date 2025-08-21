@@ -2,7 +2,7 @@ from django import forms
 from .models import Task
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
-from django.contrib.auth.models import User
+from task_manager.users.models import CustomUser
 
 class TaskForm(forms.ModelForm):
     class Meta:
@@ -19,7 +19,7 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         self.fields['status'].queryset = Status.objects.all()
-        self.fields['executor'].queryset = User.objects.filter(is_active=True).order_by('username')
+        self.fields['executor'].queryset = CustomUser.objects.filter(is_active=True).order_by('username')
         self.fields['labels'].queryset = Label.objects.all()
         
         for field_name, field in self.fields.items():
@@ -51,7 +51,7 @@ class TaskFilterForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     executor = forms.ModelChoiceField(
-        queryset=User.objects.all(),
+        queryset=CustomUser.objects.all(),
         required=False,
         label='Исполнитель',
         widget=forms.Select(attrs={'class': 'form-select'})

@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, View, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
-
+from task_manager.users.models import CustomUser
 
 # Create your views here.
 class IndexView(ListView):
@@ -18,7 +18,7 @@ class IndexView(ListView):
     context_object_name = 'users'
     
     def get_queryset(self):
-        return User.objects.annotate(
+        return CustomUser.objects.annotate(
             full_name=Concat('first_name', Value(' '), 'last_name')
         ).values(
             'id', 
@@ -104,7 +104,7 @@ class UserDeleteView(LoginRequiredMixin, View):
 
     def get_object(self):
         user_id = self.kwargs.get('user_id')
-        return get_object_or_404(User, pk=user_id)
+        return get_object_or_404(CustomUser, pk=user_id)
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

@@ -51,10 +51,6 @@ class CreateTaskView(View):
     
     def get(self, request, *args, **kwargs):
         form = TaskForm(user=request.user)
-        # Логирование для отладки
-        print("Available executors:", form.fields['executor'].queryset.count())
-        if form.fields['executor'].queryset.exists():
-            print("First executor:", form.fields['executor'].queryset.first().username)
         return render(request, 'task/create.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
