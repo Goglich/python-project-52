@@ -62,7 +62,7 @@ class TaskFilterForm(forms.Form):
         label='Метка',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    self_tasks = forms.BooleanField(
+    self_tasks = forms.CharField(
         required=False,
         label='Только свои задачи',
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})

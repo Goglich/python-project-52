@@ -23,17 +23,28 @@ class TaskView(ListView):
         executor = self.request.GET.get('executor')
         label = self.request.GET.get('label')
         self_tasks = self.request.GET.get('self_tasks')
-        if status:
+
+        # Для отладки - посмотрите какие значения приходят
+        print(f"Status: '{status}', Executor: '{executor}', Label: '{label}', Self_tasks: '{self_tasks}'")
+
+        # Статус: фильтруем только если выбрано конкретное значение
+        if status and status != '':
             queryset = queryset.filter(status_id=int(status))
+
+        # Исполнитель: особенная логика
         if executor is not None:
-            if executor == '':
-                queryset = queryset.filter(executor__isnull=True)
-            else:
+            if executor and executor != '':  # Выбран конкретный исполнитель (не пусто)
                 queryset = queryset.filter(executor_id=int(executor))
-        if label:
+            # Если executor is None - не фильтруем по исполнителю
+
+        # Метка: фильтруем только если выбрано конкретное значение
+        if label and label != '':
             queryset = queryset.filter(labels__id=label).distinct()
-        if self_tasks:
+
+        # Только свои задачи: только если явно отмечено
+        if self_tasks and self_tasks.lower() in ['true', 'on', '1', 'yes']:
             queryset = queryset.filter(author=self.request.user)
+
         return queryset
 
     def get_context_data(self, **kwargs):
