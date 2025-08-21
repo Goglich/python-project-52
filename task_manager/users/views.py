@@ -13,7 +13,7 @@ from task_manager.users.models import CustomUser
 
 # Create your views here.
 class IndexView(ListView):
-    model = User
+    model = CustomUser
     template_name = 'user/index.html'
     context_object_name = 'users'
     
@@ -65,7 +65,7 @@ class LogoutUserView(LoginRequiredMixin, View):
 
 
 class UserEditView(UpdateView):
-    model = User
+    model = CustomUser
     form_class = UserEditForm
     template_name = 'user/edit.html'
     pk_url_kwarg = 'user_id'
@@ -124,7 +124,6 @@ class UserDeleteView(LoginRequiredMixin, View):
         if request.user.id != user_to_delete.id:
             messages.error(request, 'У вас нет прав для изменения другого пользователя.')
             return redirect(self.success_url)
-        username = user_to_delete.username
         user_to_delete.delete()
         messages.success(request, f'Пользователь успешно удален')
         return redirect(self.success_url)
