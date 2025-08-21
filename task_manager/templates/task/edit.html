@@ -32,13 +32,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="id_status" class="form-label fw-bold">Статус</label>
-                        <select class="form-select" id="id_status" name="status" required>
-                            {% for value, label in form.status.field.choices %}
-                                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                        {{ form.status }}
                         {% if form.status.errors %}
                             <div class="invalid-feedback d-block">
                                 {{ form.status.errors }}
@@ -47,14 +41,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="id_executor" class="form-label fw-bold">Исполнитель</label>
-                        <select class="form-select" id="id_executor" name="executor">
-                            <option value="">Не назначен</option>
-                            {% for user in form.executor.field.queryset %}
-                                <option value="{{ user.id }}" {% if form.executor.value == user.id %}selected{% endif %}>
-                                    {{ user.first_name }} {{ user.last_name }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                        {{ form.executor }}
                         {% if form.executor.errors %}
                             <div class="invalid-feedback d-block">
                                 {{ form.executor.errors }}
@@ -64,12 +51,9 @@
                 </div>
                 <div class="mb-4">
                     <label for="id_labels" class="form-label fw-bold">Метки</label>
-                    <select class="form-select" id="id_labels" name="labels" multiple size="4">
+                    <select name="labels" id="id_labels" class="form-select" multiple size="4">
                         {% for label in form.labels.field.queryset %}
-                            <option value="{{ label.id }}" 
-                                {% if label.id in form.labels.value %}selected{% endif %}>
-                                {{ label.name }}
-                            </option>
+                        <option value="{{ label.pk }}">{{ label.name }}</option>
                         {% endfor %}
                     </select>
                     <small class="form-text text-muted">
