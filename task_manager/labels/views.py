@@ -103,5 +103,5 @@ class DeleteLabelView(View):
             messages.success(request, f'Метка успешно удалена')
             return redirect(self.success_url)
         except ProtectedError:
-            messages.error(request, 'Нельзя удалить метку, так как она связана с задачами.')
+            messages.error(request, 'Невозможно удалить метку, потому что она используется')
             return redirect('labels')
