@@ -10,7 +10,7 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="id_name" class="form-label fw-bold">Название</label>
+                    <label for="id_name" class="form-label fw-bold">Имя</label>
                     <input type="text" class="form-control" id="id_name" name="name" 
                            value="{{ form.name.value|default_if_none:'' }}" required>
                     {% if form.name.errors %}
