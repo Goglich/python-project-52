@@ -52,7 +52,6 @@ class RegisterUserForm(UserCreationForm):
             'password2'
             )
 
-
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
@@ -69,8 +68,8 @@ class RegisterUserForm(UserCreationForm):
             raise ValidationError("Пользователь с таким именем уже существует")
         return username
 
+
 class LoginUserForm(AuthenticationForm):
-    
     username = forms.CharField(
         label="Имя пользователя", 
         widget=forms.TextInput(attrs={'class': 'form-control',
@@ -94,7 +93,7 @@ class UserEditForm(forms.ModelForm):
     first_name = forms.CharField(
         label="Имя",
         widget=forms.TextInput(attrs={'class': 'form-control',
-                                      'placeholder':'Имя'
+                                      'placeholder': 'Имя'
                                       })
     )
     last_name = forms.CharField(

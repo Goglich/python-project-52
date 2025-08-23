@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 
+
 class HomePageView(TemplateView):
 
     def get(self, request):
@@ -10,5 +11,5 @@ class HomePageView(TemplateView):
 
 def index(request):
     a = None
-    a.hello() # Creating an error with an invalid line of code
+    a.hello()
     return HttpResponse("Hello, world. You're at the pollapp index.")

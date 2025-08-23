@@ -27,7 +27,6 @@ class UserCRUDTests(TestCase):
         self.edit_user_url = reverse('edit_user', args=[self.user.id])
         self.delete_user_url = reverse('delete_user', args=[self.user.id])
 
-
     def test_user_registration_success(self):
         response = self.client.post(self.create_user_url, data=self.user_data)
         self.assertEqual(response.status_code, 302)
@@ -40,7 +39,6 @@ class UserCRUDTests(TestCase):
         response = self.client.post(self.create_user_url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username='testuser').exists())
-
 
     def test_user_edit_authenticated(self):
         self.client.login(username='existinguser', password='existingpass123')
@@ -70,12 +68,7 @@ class UserCRUDTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith(self.login_url))
 
-
     def test_user_edit_other_user(self):
-        other_user = User.objects.create_user(
-            username='otheruser',
-            password='otherpass123'
-        )
         self.client.login(username='otheruser', password='otherpass123')
         updated_data = {
             'first_name': 'Updated',
@@ -87,7 +80,6 @@ class UserCRUDTests(TestCase):
         response = self.client.post(self.edit_user_url, data=updated_data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.users_list_url)
-
 
     def test_user_delete_authenticated(self):
         self.client.login(username='existinguser', password='existingpass123')
@@ -102,10 +94,6 @@ class UserCRUDTests(TestCase):
         self.assertTrue(response.url.startswith(self.login_url))
 
     def test_user_delete_other_user(self):
-        other_user = User.objects.create_user(
-            username='otheruser',
-            password='otherpass123'
-        )
         self.client.login(username='otheruser', password='otherpass123')
         initial_count = User.objects.count()
         response = self.client.post(self.delete_user_url)

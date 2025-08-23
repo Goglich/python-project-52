@@ -107,7 +107,6 @@ class LabelCRUDTest(TestCase):
         self.assertEqual(str(messages[0]), 'Метка успешно удалена')
         self.assertFalse(Label.objects.filter(id=self.label.id).exists())
 
-
     def test_unauthenticated_access(self):
         """Тест доступа неавторизованного пользователя"""
         self.client.logout()

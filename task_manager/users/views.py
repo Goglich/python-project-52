@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterUserForm, LoginUserForm, UserEditForm
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.contrib.auth.models import User
 from django.db.models.functions import Concat
 from django.db.models import Value
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,7 +10,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from task_manager.users.models import CustomUser
 
-# Create your views here.
+
 class IndexView(ListView):
     model = CustomUser
     template_name = 'user/index.html'
@@ -40,7 +39,10 @@ class RegistrationView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, f'Исправьте ошибки в форме: {form.errors}')
+        messages.error(
+            self.request, 
+            f'Исправьте ошибки в форме: {form.errors}'
+            )
         return super().form_invalid(form)
 
 
@@ -73,14 +75,20 @@ class UserEditView(UpdateView):
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
     
     def get_object(self, queryset=None):
         user = super().get_object(queryset)
         if self.request.user.id != user.id:
-            messages.error(self.request, 'У вас нет прав для изменения другого пользователя')
+            messages.error(
+                self.request, 
+                'У вас нет прав для изменения другого пользователя'
+                )
             return None
         return user
     
@@ -94,7 +102,7 @@ class UserEditView(UpdateView):
         self.object = self.get_object()
         if self.object is None:
             return redirect(self.success_url)
-        messages.success(request, f'Пользователь успешно изменен')
+        messages.success(request, 'Пользователь успешно изменен')
         return super().post(request, *args, **kwargs)
 
     
@@ -108,22 +116,31 @@ class UserDeleteView(LoginRequiredMixin, View):
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         user_to_delete = self.get_object()
         if request.user.id != user_to_delete.id:
-            messages.error(request, 'У вас нет прав для изменения другого пользователя.')
+            messages.error(
+                request, 
+                'У вас нет прав для изменения другого пользователя.'
+                )
             return redirect(self.success_url)
         return render(request, self.template_name, {'user': user_to_delete})
 
     def post(self, request, *args, **kwargs):
         user_to_delete = self.get_object()
         if request.user.id != user_to_delete.id:
-            messages.error(request, 'У вас нет прав для изменения другого пользователя.')
+            messages.error(
+                request, 
+                'У вас нет прав для изменения другого пользователя.'
+                )
             return redirect(self.success_url)
         user_to_delete.delete()
-        messages.success(request, f'Пользователь успешно удален')
+        messages.success(request, 'Пользователь успешно удален')
         return redirect(self.success_url)

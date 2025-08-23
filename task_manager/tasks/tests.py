@@ -163,7 +163,8 @@ class TaskCRUDTests(TestCase):
         task = form.save()
         self.assertEqual(task.author, self.user1)
         self.assertEqual(task.name, 'Form Task')
-        
+
+
 def test_unauthenticated_access(self):
     
     """Тест доступа неавторизованных пользователей"""
