@@ -103,5 +103,5 @@ class StatusDeleteView(View):
             messages.success(request, f'Статус успешно удален')
             return redirect(self.success_url)
         except ProtectedError:
-            messages.error(request, 'Нельзя удалить статус, так как он связан с задачами.')
+            messages.error(request, 'Невозможно удалить статус, потому что он используется')
             return redirect('statuses')
