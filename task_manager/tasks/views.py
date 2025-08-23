@@ -129,14 +129,14 @@ class DeleteTaskView(View):
     def get(self, request, *args, **kwargs):
         task_to_delete = self.get_object()
         if request.user.id != task_to_delete.author.id:
-            messages.error(request, 'Нельзя удалять задачи другого автора')
+            messages.error(request, 'Задачу может удалить только ее автор')
             return redirect(self.success_url)
         return render(request, self.template_name, {'task': task_to_delete})
 
     def post(self, request, *args, **kwargs):
         task_to_delete = self.get_object()
         if request.user.id != task_to_delete.author.id:
-            messages.error(request, 'Нельзя удалять задачи другого автора')
+            messages.error(request, 'Задачу может удалить только ее автор')
             return redirect(self.success_url)
         task = task_to_delete.name
         task_to_delete.delete()
