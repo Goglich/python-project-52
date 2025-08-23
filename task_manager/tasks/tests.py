@@ -6,6 +6,7 @@ from task_manager.labels.models import Label
 from task_manager.tasks.models import Task
 from task_manager.tasks.forms import TaskForm
 
+
 class TaskCRUDTests(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(
@@ -65,7 +66,10 @@ class TaskCRUDTests(TestCase):
         """Тест просмотра деталей задачи"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.get(reverse('task', kwargs={'task_id': self.task.id}))
+        response = self.client.get(reverse(
+            'task', 
+            kwargs={'task_id': self.task.id}
+            ))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'task/show_task.html')
         self.assertEqual(response.context['task'], self.task)
@@ -74,7 +78,10 @@ class TaskCRUDTests(TestCase):
         """Тест GET запроса на редактирование задачи"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.get(reverse('edit_task', kwargs={'task_id': self.task.id}))
+        response = self.client.get(reverse(
+            'edit_task', 
+            kwargs={'task_id': self.task.id}
+            ))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'task/edit.html')
         self.assertIsInstance(response.context['form'], TaskForm)
@@ -104,7 +111,10 @@ class TaskCRUDTests(TestCase):
         """Тест GET запроса на удаление задачи"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.get(reverse('delete_task', kwargs={'task_id': self.task.id}))
+        response = self.client.get(reverse(
+            'delete_task', 
+            kwargs={'task_id': self.task.id}
+            ))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'task/task_confirm_delete.html')
         self.assertEqual(response.context['task'], self.task)
@@ -113,7 +123,10 @@ class TaskCRUDTests(TestCase):
         """Тест POST запроса на удаление задачи"""
         self.client.login(username='user1', password='password123')
         
-        response = self.client.post(reverse('delete_task', kwargs={'task_id': self.task.id}))
+        response = self.client.post(reverse(
+            'delete_task', 
+            kwargs={'task_id': self.task.id}
+            ))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('tasks'))
         self.assertFalse(Task.objects.filter(id=self.task.id).exists())
@@ -121,10 +134,16 @@ class TaskCRUDTests(TestCase):
     def test_task_delete_by_non_author(self):
         """Тест попытки удаления задачи не автором"""
         self.client.login(username='user2', password='password123')
-        response = self.client.get(reverse('delete_task', kwargs={'task_id': self.task.id}))
+        response = self.client.get(reverse(
+            'delete_task', 
+            kwargs={'task_id': self.task.id}
+            ))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('tasks'))
-        response = self.client.post(reverse('delete_task', kwargs={'task_id': self.task.id}))
+        response = self.client.post(reverse(
+            'delete_task', 
+            kwargs={'task_id': self.task.id}
+            ))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('tasks'))
         self.assertTrue(Task.objects.filter(id=self.task.id).exists())
@@ -146,6 +165,7 @@ class TaskCRUDTests(TestCase):
         self.assertEqual(task.name, 'Form Task')
         
 def test_unauthenticated_access(self):
+    
     """Тест доступа неавторизованных пользователей"""
     urls = [
         reverse('tasks'),
@@ -215,13 +235,19 @@ class TaskFilterTests(TestCase):
         self.client.force_login(self.user1)
 
     def test_filter_by_status(self):
-        response = self.client.get(reverse('tasks'), {'status': self.status1.id})
+        response = self.client.get(
+            reverse('tasks'), 
+            {'status': self.status1.id}
+            )
         self.assertEqual(response.status_code, 200)
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 2)
         self.assertIn(self.task1, tasks)
         self.assertIn(self.task3, tasks)
-        response = self.client.get(reverse('tasks'), {'status': self.status2.id})
+        response = self.client.get(
+            reverse('tasks'), 
+            {'status': self.status2.id}
+            )
         self.assertEqual(response.status_code, 200)
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 1)
@@ -230,14 +256,20 @@ class TaskFilterTests(TestCase):
     def test_filter_by_executor(self):
         response = self.client.get(reverse('tasks'))
         self.assertEqual(len(response.context['tasks']), 3)
-        response = self.client.get(reverse('tasks'), {'executor': self.user2.id})
+        response = self.client.get(
+            reverse('tasks'), 
+            {'executor': self.user2.id}
+            )
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 1, 
-            f"Ожидалась 1 задача, получено {len(tasks)}. Задачи: {list(tasks)}")
+            f"Ожидалась 1 задача, получено {len(tasks)}.")
         self.assertIn(self.task1, tasks)
         self.assertNotIn(self.task2, tasks)
         self.assertNotIn(self.task3, tasks)
-        response = self.client.get(reverse('tasks'), {'executor': self.user1.id})
+        response = self.client.get(
+            reverse('tasks'), 
+            {'executor': self.user1.id}
+            )
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 1)
         self.assertIn(self.task3, tasks)

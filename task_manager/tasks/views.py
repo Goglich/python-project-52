@@ -4,7 +4,7 @@ from .forms import TaskForm, TaskFilterForm
 from .models import Task
 from django.urls import reverse_lazy
 from django.contrib import messages
-# Create your views here.
+
 
 class TaskView(ListView):
     model = Task
@@ -13,35 +13,34 @@ class TaskView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request,
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = Task.objects.select_related('status', 'author', 'executor').order_by('time_create')
+        queryset = Task.objects.select_related(
+            'status',
+            'author',
+            'executor'
+            ).order_by('time_create')
         status = self.request.GET.get('status')
         executor = self.request.GET.get('executor')
         label = self.request.GET.get('label')
         self_tasks = self.request.GET.get('self_tasks')
 
-        # Для отладки - посмотрите какие значения приходят
-        print(f"Status: '{status}', Executor: '{executor}', Label: '{label}', Self_tasks: '{self_tasks}'")
-
-        # Статус: фильтруем только если выбрано конкретное значение
         if status and status != '':
             queryset = queryset.filter(status_id=int(status))
 
-        # Исполнитель: особенная логика
         if executor is not None:
-            if executor and executor != '':  # Выбран конкретный исполнитель (не пусто)
+            if executor and executor != '':
                 queryset = queryset.filter(executor_id=int(executor))
-            # Если executor is None - не фильтруем по исполнителю
 
-        # Метка: фильтруем только если выбрано конкретное значение
         if label and label != '':
             queryset = queryset.filter(labels__id=label).distinct()
 
-        # Только свои задачи: только если явно отмечено
         if self_tasks and self_tasks.lower() in ['true', 'on', '1', 'yes']:
             queryset = queryset.filter(author=self.request.user)
 
@@ -56,7 +55,10 @@ class TaskView(ListView):
 class CreateTaskView(View):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
     
@@ -68,7 +70,7 @@ class CreateTaskView(View):
         form = TaskForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Задача успешно создана')
+            messages.success(request, 'Задача успешно создана')
             return redirect('tasks')
         return render(request, 'task/create.html', {'form': form})
 
@@ -76,7 +78,10 @@ class CreateTaskView(View):
 class ShowTaskView(View):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
     
@@ -98,7 +103,10 @@ class EditTaskView(UpdateView):
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request,
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -108,7 +116,7 @@ class EditTaskView(UpdateView):
         return kwargs
     
     def form_valid(self, form):
-        messages.success(self.request, f'Задача успешно изменена')
+        messages.success(self.request, 'Задача успешно изменена')
         return super().form_valid(form)
 
 
@@ -118,7 +126,10 @@ class DeleteTaskView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -138,7 +149,6 @@ class DeleteTaskView(View):
         if request.user.id != task_to_delete.author.id:
             messages.error(request, 'Задачу может удалить только ее автор')
             return redirect(self.success_url)
-        task = task_to_delete.name
         task_to_delete.delete()
-        messages.success(request, f'Задача успешно удалена')
+        messages.success(request, 'Задача успешно удалена')
         return redirect(self.success_url)

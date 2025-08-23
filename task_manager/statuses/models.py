@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import ProtectedError
 
+
 class Status(models.Model):
     name = models.CharField(max_length=255)
     time_create = models.DateTimeField(auto_now_add=True)

@@ -4,13 +4,17 @@ from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
 from task_manager.users.models import CustomUser
 
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['name', 'description', 'status', 'executor', 'labels']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5
+                }),
             'labels': forms.SelectMultiple(attrs={'class': 'form-select'}),
         }
     
@@ -19,7 +23,7 @@ class TaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         self.fields['status'].queryset = Status.objects.all()
-        self.fields['executor'].queryset = CustomUser.objects.filter(is_active=True).order_by('username')
+        self.fields['executor'].queryset = CustomUser.objects.all()
         self.fields['labels'].queryset = Label.objects.all()
         
         for field_name, field in self.fields.items():

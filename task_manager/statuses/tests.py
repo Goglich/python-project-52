@@ -3,6 +3,7 @@ from django.urls import reverse
 from task_manager.statuses.models import Status
 from django.contrib.auth.models import User
 
+
 class StatusCRUDIntegrationTest(TestCase):
     def setUp(self):
         self.client = Client()

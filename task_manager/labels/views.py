@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import ProtectedError
 
-# Create your views here.
+
 class LabelsView(ListView):
     model = Label
     template_name = 'label/index.html'
@@ -14,7 +14,10 @@ class LabelsView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -29,7 +32,10 @@ class LabelsView(ListView):
 class CreateLabelView(View):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -41,7 +47,7 @@ class CreateLabelView(View):
         form = LabelForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Метка успешно создана')
+            messages.success(request, 'Метка успешно создана')
             return redirect('labels')
         return render(request, 'label/create.html', {'form': form})
     
@@ -55,7 +61,10 @@ class EditLabelView(UpdateView):
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -83,7 +92,10 @@ class DeleteLabelView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -97,11 +109,13 @@ class DeleteLabelView(View):
 
     def post(self, request, *args, **kwargs):
         label_to_delete = self.get_object()
-        label_name = label_to_delete.name
         try:
             label_to_delete.delete()
-            messages.success(request, f'Метка успешно удалена')
+            messages.success(request, 'Метка успешно удалена')
             return redirect(self.success_url)
         except ProtectedError:
-            messages.error(request, 'Невозможно удалить метку, потому что она используется')
+            messages.error(
+                request, 
+                'Невозможно удалить метку, потому что она используется'
+                )
             return redirect('labels')

@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models import ProtectedError
 
-# Create your views here.
+
 class StatusView(ListView):
     model = Status
     template_name = 'status/index.html'
@@ -14,7 +14,10 @@ class StatusView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -29,7 +32,10 @@ class StatusView(ListView):
 class CreateStatusView(View):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -41,7 +47,7 @@ class CreateStatusView(View):
         form = StatusForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Статус успешно создан')
+            messages.success(request, 'Статус успешно создан')
             return redirect('statuses')
         return render(request, 'status/create.html', {'form': form})
     
@@ -55,7 +61,10 @@ class EditStatusView(UpdateView):
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -73,7 +82,7 @@ class EditStatusView(UpdateView):
         self.object = self.get_object()
         if self.object is None:
             return redirect(self.success_url)
-        messages.success(request, f'Статус успешно изменен')
+        messages.success(request, 'Статус успешно изменен')
         return super().post(request, *args, **kwargs)
     
 
@@ -83,7 +92,10 @@ class StatusDeleteView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, 'Вы не авторизованы! Пожалуйста, войдите в систему.')
+            messages.error(
+                request, 
+                'Вы не авторизованы! Пожалуйста, войдите в систему.'
+                )
             return redirect('login')
         return super().dispatch(request, *args, **kwargs)
 
@@ -93,15 +105,21 @@ class StatusDeleteView(View):
 
     def get(self, request, *args, **kwargs):
         status_to_delete = self.get_object()
-        return render(request, self.template_name, {'status': status_to_delete})
+        return render(
+            request, 
+            self.template_name, 
+            {'status': status_to_delete}
+            )
 
     def post(self, request, *args, **kwargs):
         status_to_delete = self.get_object()
-        status_name = status_to_delete.name
         try:
             status_to_delete.delete()
-            messages.success(request, f'Статус успешно удален')
+            messages.success(request, 'Статус успешно удален')
             return redirect(self.success_url)
         except ProtectedError:
-            messages.error(request, 'Невозможно удалить статус, потому что он используется')
+            messages.error(
+                request, 
+                'Невозможно удалить статус, потому что он используется'
+                )
             return redirect('statuses')

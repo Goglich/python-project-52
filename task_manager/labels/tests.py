@@ -4,6 +4,7 @@ from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
 from task_manager.labels.models import Label
 
+
 class LabelCRUDTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -15,8 +16,14 @@ class LabelCRUDTest(TestCase):
         self.label = Label.objects.create(name='Test Label')
         self.labels_url = reverse('labels')
         self.create_url = reverse('create_label')
-        self.edit_url = lambda id: reverse('edit_label', kwargs={'label_id': id})
-        self.delete_url = lambda id: reverse('delete_label', kwargs={'label_id': id})
+        self.edit_url = lambda id: reverse(
+            'edit_label', 
+            kwargs={'label_id': id}
+            )
+        self.delete_url = lambda id: reverse(
+            'delete_label', 
+            kwargs={'label_id': id}
+            )
 
     def test_label_list_view(self):
         """Тест отображения списка меток"""
@@ -50,7 +57,10 @@ class LabelCRUDTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('form' in response.context)
         self.assertTrue(response.context['form'].errors)
-        self.assertIn('This field is required.', response.context['form'].errors['name'][0])
+        self.assertIn(
+            'This field is required.', 
+            response.context['form'].errors['name'][0]
+            )
 
     def test_label_edit_view_get(self):
         """Тест GET-запроса для редактирования метки"""
@@ -76,7 +86,10 @@ class LabelCRUDTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('form' in response.context)
         self.assertTrue(response.context['form'].errors)
-        self.assertIn('This field is required.', response.context['form'].errors['name'][0])
+        self.assertIn(
+            'This field is required.',
+            response.context['form'].errors['name'][0]
+            )
 
     def test_label_delete_view_get(self):
         """Тест GET-запроса для удаления метки"""
