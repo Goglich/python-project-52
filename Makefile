@@ -15,3 +15,6 @@ start:
 
 collectstatic:
 	uv run python3 manage.py collectstatic --no-input
+
+lint:
+	uv run ruff check
